@@ -4,6 +4,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
+function resolve (dir) {
+  return path.join(__dirname, './', dir)
+}
+
+const createLintingRule = () => ({
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src')],
+  options: {
+    formatter: require('eslint-friendly-formatter'),
+    emitWarning: true
+  }
+});
 
 module.exports = {
     entry:  path.join(__dirname, 'src/index.js'),
@@ -35,10 +49,27 @@ module.exports = {
     //  ],
     module: {
         rules: [
+            createLintingRule(),
             {
             test: /\.vue$/,
             use: 'vue-loader',
-        },
+            // options: {
+            //     loaders: {
+            //         sass: [
+            //         'vue-style-loader',
+            //         'css-loader',
+            //         // postcss-loader非必须
+            //         'sass-loader',
+            //         // {
+            //         //     loader: 'sass-resources-loader',
+            //         //     options: {
+            //         //     // 需更改为项目中实际scss文件路径
+            //         //     resources: path.resolve(__dirname, './src/styles/mixin.scss'),
+            //         //     },
+            //         // },
+            //         ],
+            //     }}
+            },
 
         {
             test:/\.js$/, //用正则匹配文件，用require或者import引入的都会匹配到
